@@ -30,3 +30,6 @@ will give the user a jwt or sessionKey (stored in a cookie) which will store the
 7. /auth/login GET PUBLIC WITH_PROVIDER
 8. /auth/logout PUT PROTECTED
 9. /auth/signup POST PUBLIC BODY={{email, password, nick, preferences} as JSON}
+
+10. /users GET PROTECTED BODY={{Filters, Pagination}}
+11. /users/:userId GET PROTECTED
