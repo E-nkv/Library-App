@@ -1,35 +1,13 @@
-Library App: Project to improve my web-dev skills.
+# About Library App
 
-The frontend will only be focused initially on the app's functionality, not the styling and UI stuff . Either with CSR (React) or SSR (Go Htmx Templ)
-
-Specs:
-
-# General Flow:
-
-The normal user can see the list of available books and/or authors, and get them with filters & pagination applied.
-Logged-in users can also download books, and see book details.
-
-# Authentication:
-
-The api's behaviour depends upon whether the user is logged in or not, and the role of the user.
-
-A user can only have 1 account, determined by email. If he logs in with provider, then we create the corresponding account such that we can keep track of the users data (preferred genres, book status [saved / collection, currently-reading, already-read], and more.)
-
-The user can either create account and login (with unique email), or sign in with provider(s). This
-will give the user a jwt or sessionKey (stored in a cookie) which will store the id of the user. On subsequent reqs, api will determine what to do with this token on the auth middleware.
-
-# Routes
-
-1. /books GET PUBLIC BODY={{Filters, Pagination} as JSON}
-2. /books/:bookId GET PROTECTED
-3. /books/:bookId PUT PROTECTED ADMIN/MODERATOR
-4. /books POST CREATE PROTECTED ADMIN BODY={bookData as JSON}
-5. /books/:bookId DELETE PROTECTED ADMIN
-
-6. /auth/login POST PUBLIC BODY={{email, password} as JSON}
-7. /auth/login GET PUBLIC WITH_PROVIDER
-8. /auth/logout PUT PROTECTED
-9. /auth/signup POST PUBLIC BODY={{email, password, nick, preferences} as JSON}
-
-10. /users GET PROTECTED BODY={{Filters, Pagination}}
-11. /users/:userId GET PROTECTED
+Its a fullstack project using go, postgres, and react.
+The key features are:
+1. Role based Authentication and authorization (oauth2 or jwts)
+2. Listing book(s) with filtering, pagination and sorting.
+3. Admins/moderators can create / update books and authors data
+4. Users can rate / comment on a book
+5. Users have a profile page where they can see / change their information
+6. Users can mark a book as read, and \ or bookmark it.
+7. Users have a personalized feed of recomended books based on their preferences, read books and bookmarked books.
+8. Moderators can delete comments of users, as well as ban/unban them. 
+9. Admins can undo anything a moderator does, as well as manage the data of all users
