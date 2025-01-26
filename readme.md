@@ -10,4 +10,4 @@ The key features are:
 6. Users can mark a book as read, and \ or bookmark it.
 7. Users have a personalized feed of recomended books based on their preferences, read books and bookmarked books.
 8. Moderators can delete comments of users, as well as ban/unban them. 
-9. Admins can undo anything a moderator does, as well as manage the data of all users
+9. Admins can undo anything a moderator does, ban/unban/softdelete/delete users from the system, as well as manage the data of all users (how many users active, top books, top genres, demographics of users, and so on)
