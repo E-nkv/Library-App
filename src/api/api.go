@@ -56,8 +56,9 @@ func (app *App) genAuthorHandler() http.Handler {
 
 func helloFrom(s string) func(w http.ResponseWriter, r *http.Request) {
 	s = fmt.Sprintf("Hello from %s!", s)
-	fmt.Println(s)
+
 	return func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println(s)
 		w.Write([]byte(s))
 	}
 }

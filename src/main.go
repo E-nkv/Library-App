@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -17,5 +18,6 @@ func main() {
 		Addr:    ":8080",
 		Handler: router,
 	}
+	fmt.Printf("Started server at %s\n", "localhost:8080")
 	log.Fatal(srv.ListenAndServe())
 }
