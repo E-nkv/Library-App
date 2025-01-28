@@ -1,8 +1,11 @@
-module github.com/E-nkv/libraryAPI
+module library
 
-go 1.23.2
+go 1.23.5
 
 require (
-	cloud.google.com/go/compute/metadata v0.3.0 // indirect
-	golang.org/x/oauth2 v0.25.0 // indirect
+	github.com/go-faker/faker/v4 v4.5.0
+	github.com/lib/pq v1.10.9
+	golang.org/x/crypto v0.32.0
 )
+
+require golang.org/x/text v0.21.0 // indirect

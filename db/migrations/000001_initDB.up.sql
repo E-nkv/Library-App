@@ -1,0 +1,45 @@
+CREATE TABLE IF NOT EXISTS users (
+	id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	full_name VARCHAR(100) NOT NULL,
+	email VARCHAR(250) UNIQUE,
+	hash_pass VARCHAR(100) NOT NULL, --bcrypt hash len is 60
+	is_verified BOOLEAN  NOT NULL DEFAULT FALSE,
+	profileImg VARCHAR(300),
+	created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP   
+);
+
+CREATE TABLE IF NOT EXISTS books (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    title VARCHAR(200)
+);
+
+CREATE TABLE IF NOT EXISTS tags (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS book_tags (
+    book_id BIGINT REFERENCES books(id),
+    tag_id INT REFERENCES tags(id)
+);
+
+CREATE INDEX idx_bookTags_bookId ON book_tags(book_id);
+
+CREATE TABLE IF NOT EXISTS authors (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    full_name VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS book_authors (
+    book_id BIGINT REFERENCES books(id),
+    author_id INT REFERENCES authors(id)
+);
+CREATE INDEX idx_bookAuthors_bookId ON book_authors(book_id);
+
+
+
+
+
+
+
