@@ -1,4 +1,5 @@
 
+DROP TABLE IF EXISTS users_tags;
 DROP TABLE IF EXISTS book_tags;
 DROP TABLE IF EXISTS book_authors;
 DROP TABLE IF EXISTS authors;

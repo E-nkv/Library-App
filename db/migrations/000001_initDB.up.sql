@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS tags (
 );
 
 CREATE TABLE IF NOT EXISTS book_tags (
-    book_id BIGINT REFERENCES books(id),
-    tag_id INT REFERENCES tags(id)
+    book_id BIGINT REFERENCES books(id) ON DELETE CASCADE ,
+    tag_id INT REFERENCES tags(id) ON DELETE CASCADE
 );
 
 CREATE INDEX idx_bookTags_bookId ON book_tags(book_id);
@@ -32,10 +32,16 @@ CREATE TABLE IF NOT EXISTS authors (
 );
 
 CREATE TABLE IF NOT EXISTS book_authors (
-    book_id BIGINT REFERENCES books(id),
+    book_id BIGINT REFERENCES books(id) ON DELETE CASCADE,
     author_id INT REFERENCES authors(id)
 );
+
 CREATE INDEX idx_bookAuthors_bookId ON book_authors(book_id);
+
+CREATE TABLE users_tags (
+    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+    tag_id INT REFERENCES tags(id) ON DELETE CASCADE
+);
 
 
 
