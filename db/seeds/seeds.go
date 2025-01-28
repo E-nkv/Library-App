@@ -39,9 +39,7 @@ func (s S) seedDb() error {
 	panicIfErr(s.seedTags(10))
 	panicIfErr(s.seedUsers(20))
 
-	/* if err := s.seedBooks(); err != nil {
-		panic(err)
-	} */
+	panicIfErr(s.seedBooks(45))
 
 	fmt.Println("Db seeding ended succesfuly")
 	return nil

@@ -43,6 +43,8 @@ CREATE TABLE users_tags (
     tag_id INT REFERENCES tags(id) ON DELETE CASCADE
 );
 
+CREATE INDEX idx_usersTags_userId ON users_tags(user_id);
+
 
 
 

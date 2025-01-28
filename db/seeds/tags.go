@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand/v2"
+	"slices"
+)
 
 var allowedTagNames = []string{
 	"Action",
@@ -115,10 +119,52 @@ func (s S) seedTags(N int) error {
 	if err != nil {
 		return err
 	}
-	for _, tagName := range allowedTagNames {
-		if _, err := smtp.Exec(tagName); err != nil {
+	for i := range N {
+		if _, err := smtp.Exec(allowedTagNames[i]); err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+func (s S) getTagsIds() ([]int, error) {
+	ids := make([]int, 0, totalAllowedTags)
+
+	var u int
+	rs, err := s.DB.Query("SELECT id FROM tags")
+	if err != nil {
+		return nil, err
+	}
+	for i := 0; rs.Next(); i++ {
+		rs.Scan(&u)
+		ids = append(ids, u)
+	}
+
+	return ids, nil
+}
+
+// genTagsRandomly generates a random amount of non-duplicate tags, in the range [from, to]
+func genTagsRandomly(et []int, from, to int) []int {
+	var idxs []int
+	var res []int
+
+	N := len(et)
+	amount := from + rand.IntN(to-from+1)
+	if amount > len(et) {
+		panic("There is no way to randomly select N non-duplicate vals from a slice with len < N ")
+	}
+	for range amount {
+		var n int
+		n = rand.IntN(N)
+
+		for slices.Contains(idxs, n) {
+
+			n = rand.IntN(N)
+		}
+		idxs = append(idxs, n)
+		res = append(res, et[n])
+
+	}
+
+	return res
 }

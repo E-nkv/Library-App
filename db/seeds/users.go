@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math/rand/v2"
-	"slices"
 	"strings"
 
 	faker "github.com/go-faker/faker/v4"
@@ -42,20 +40,6 @@ func genSeedUsers(N int, us *[]seedUser) {
 
 }
 
-func (s S) getTagsIds() ([]int, error) {
-	ids := make([]int, totalAllowedTags)
-
-	rs, err := s.DB.Query("SELECT id FROM tags")
-	if err != nil {
-		return nil, err
-	}
-	for i := 0; rs.Next(); i++ {
-		rs.Scan(&ids[i])
-
-	}
-
-	return ids, nil
-}
 func (s S) seedUsers(N int) error {
 
 	existingTags, err := s.getTagsIds()
@@ -93,54 +77,22 @@ func (s S) seedUsers(N int) error {
 			fmt.Printf("failed inserting the user number %d. Error is: %v\n", i, err.Error())
 			continue
 		}
-		fmt.Println("id of curr user: ", user_id)
 
-		tagIdsForUser := genTagsRandomly(existingTags)
-		if slices.Contains(tagIdsForUser, 0) {
-			fmt.Println("viva fidel")
+		tagIdsForUser := genTagsRandomly(existingTags, 0, 10)
+		smtpUsersTags, err := s.DB.Prepare("INSERT INTO users_tags VALUES($1, $2)")
+		if err != nil {
+			return err
 		}
 		for _, tagId := range tagIdsForUser {
-			s.addTagToUser(user_id, tagId)
+			_, err := smtpUsersTags.Exec(user_id, tagId)
+			if err != nil {
+				fmt.Printf("error inserting the tag with id %d for the user %d\n", tagId, user_id)
+				fmt.Println(err)
+				continue
+			}
 		}
 
 	}
 
 	return nil
-}
-
-func genTagsRandomly(et []int) []int {
-	var idxs []int
-	var res []int
-
-	N := len(et)
-	amount := rand.IntN(11)
-	for range amount {
-		var n int
-		n = rand.IntN(N)
-
-		for slices.Contains(idxs, n) {
-
-			n = rand.IntN(N)
-		}
-		idxs = append(idxs, n)
-		res = append(res, et[n])
-
-	}
-
-	return res
-}
-
-func (s S) addTagToUser(user_id int64, tagId int) {
-	res, err := s.DB.Exec("INSERT INTO users_tags VALUES($1, $2)", user_id, tagId)
-	if err != nil {
-		fmt.Printf("error inserting the tag with id %d for the user %d\n", tagId, user_id)
-		fmt.Println(err)
-		return
-	}
-	ra, e := res.RowsAffected()
-	if e != nil {
-		fmt.Println("error with getting rows affected, ", e)
-	} else if ra != 1 {
-		fmt.Println("error with rows affected not being 1: ", ra)
-	}
 }
