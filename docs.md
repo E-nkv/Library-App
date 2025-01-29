@@ -11,9 +11,9 @@ PUT /books/{id}/unread -> mark the book as unread
 PUT /books/{id}/rank -> rank the book from 1 to 5 stars 
 POST /books/{id}/bookmark 
 DELETE /books/{id}/unbookmark 
-POST /books/id/comment
-PUT /books/{bookID}/comment/{commentID} -> edit a comment
-DELETE /books/{bookID}/comment/{commentID} 
+POST /books/id/comments
+PUT /books/{bookID}/comments/{commentID} -> edit a comment
+DELETE /books/{bookID}/comments/{commentID} 
 
 # USERS
 POST /users 

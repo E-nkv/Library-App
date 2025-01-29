@@ -144,9 +144,9 @@ func (s S) getTagsIds() ([]int, error) {
 }
 
 // genTagsRandomly generates a random amount of non-duplicate tags, in the range [from, to]
-func genTagsRandomly(et []int, from, to int) []int {
+func selectElsRandomly[T any](et []T, from, to int) []T {
 	var idxs []int
-	var res []int
+	var res []T
 
 	N := len(et)
 	amount := from + rand.IntN(to-from+1)

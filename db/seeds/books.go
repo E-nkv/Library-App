@@ -84,7 +84,8 @@ func (s S) seedBooks(N int) error {
 			fmt.Println("error inserting book: ", i)
 			continue
 		}
-		tagIdsForBook := genTagsRandomly(existingTags, 1, 4)
+		//insert tags
+		tagIdsForBook := selectElsRandomly(existingTags, 1, 4)
 		for _, tagId := range tagIdsForBook {
 			_, err := smtpBookTags.Exec(bookID, tagId)
 			if err != nil {
@@ -94,4 +95,23 @@ func (s S) seedBooks(N int) error {
 
 	}
 	return nil
+}
+
+func (s S) getBooksIds() ([]int, error) {
+	ids := []int{}
+
+	var u int
+	rs, err := s.DB.Query("SELECT id FROM books")
+	if err != nil {
+		return nil, err
+	}
+	for i := 0; rs.Next(); i++ {
+		err = rs.Scan(&u)
+		if err != nil {
+			return nil, err
+		}
+		ids = append(ids, u)
+	}
+
+	return ids, nil
 }
