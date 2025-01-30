@@ -19,6 +19,7 @@ type User struct {
 	Email      string    `json:"email"`
 	HashPass   string    `json:"-"`
 	IsVerified bool      `json:"isVerified"`
+	IsActive   bool      `json:"is_active"`
 	TagsJson   string    `json:"tags"`
 	CreatedAt  time.Time `json:"created_at"`
 }

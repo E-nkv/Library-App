@@ -62,8 +62,8 @@ func (m PsqlUserModel) GetUsers(limit int, lastID int64) ([]*types.User, error) 
 
 		args := []any{&u.ID, &u.FullName, &u.Email}
 		if err = rows.Scan(args...); err != nil {
-			fmt.Println("Error exttracting row into user.. ", err)
-			continue
+
+			return nil, err
 		}
 
 		users = append(users, &u)
