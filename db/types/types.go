@@ -7,11 +7,22 @@ type Tag struct {
 	Name string `json:"name"`
 }
 
+type UserAuth struct {
+	ID   int64  `json:"id"`
+	Role string `json:"role"`
+}
+
 type UserCreate struct {
 	FullName    string `json:"fullName"`
 	PasswdPlain string `json:"password"`
 	Tags        []Tag  `json:"tags"`
 	Email       string `json:"email"`
+	Role        string `json:"role"`
+}
+
+type UserLogin struct {
+	Email       string `json:"email"`
+	PlainPasswd string `json:"password"`
 }
 type User struct {
 	ID         int64     `json:"id"`
@@ -20,6 +31,7 @@ type User struct {
 	HashPass   string    `json:"-"`
 	IsVerified bool      `json:"isVerified"`
 	IsActive   bool      `json:"is_active"`
+	Role       string    `json:"role"`
 	TagsJson   string    `json:"tags"`
 	CreatedAt  time.Time `json:"created_at"`
 }

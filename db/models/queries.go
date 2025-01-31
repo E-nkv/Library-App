@@ -55,14 +55,17 @@ func createQueryGetUserWithTags(id int64) string {
 }
 
 func createQueryGetUser(id int64) string {
-	return fmt.Sprintf("SELECT id, full_name, email, hash_pass FROM USERS u WHERE u.id = %d", id)
+	return fmt.Sprintf("SELECT id, full_name, email, hash_pass, is_active, is_verified, role FROM USERS u WHERE u.id = %d", id)
+}
+func createQueryGetUserByEmail(email string) string {
+	return fmt.Sprintf("SELECT id, full_name, email, hash_pass, is_active, is_verified, role FROM USERS u WHERE u.email = '%s'", email)
 }
 
 func createQueryGetUsers(limit int, lastID int64) string {
 	var q string
 	if lastID > 0 {
-		q = fmt.Sprintf("WITH users AS (SELECT id, full_name, email FROM users u WHERE u.id > %d)", lastID)
+		q = fmt.Sprintf("WITH users AS (SELECT id, full_name, email, is_active, is_verified, role FROM users u WHERE u.id > %d)", lastID)
 	}
-	q += fmt.Sprintf("SELECT id, full_name, email FROM users LIMIT %d", limit)
+	q += fmt.Sprintf("SELECT id, full_name, email, is_active, is_verified, role FROM users LIMIT %d", limit)
 	return q
 }

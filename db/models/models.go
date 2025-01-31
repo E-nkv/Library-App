@@ -16,6 +16,7 @@ type UserModel interface {
 	GetUserWithTags(id int64) (*types.User, error)
 	GetUsers(limit int, lastID int64) ([]*types.User, error)
 	GetUser(id int64) (*types.User, error)
+	GetUserByEmail(email string) (*types.User, error)
 	CreateUser(*types.UserCreate) (int64, error)
 	DeleteUser(id int64) error
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"library/cmd/api"
 	"library/db/models"
 	"log"
@@ -18,5 +19,6 @@ func main() {
 		Addr:    ":8080",
 		Handler: router,
 	}
+	fmt.Println("started server on :8080")
 	log.Fatal(server.ListenAndServe())
 }

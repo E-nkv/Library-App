@@ -8,6 +8,7 @@ import (
 	"library/db/types"
 	"library/errs"
 
+	pq "github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -60,7 +61,7 @@ func (m PsqlUserModel) GetUsers(limit int, lastID int64) ([]*types.User, error) 
 	for i := 0; rows.Next(); i++ {
 		var u types.User
 
-		args := []any{&u.ID, &u.FullName, &u.Email}
+		args := []any{&u.ID, &u.FullName, &u.Email, &u.IsActive, &u.IsVerified, &u.Role}
 		if err = rows.Scan(args...); err != nil {
 
 			return nil, err
@@ -89,7 +90,20 @@ func (m PsqlUserModel) GetUser(id int64) (*types.User, error) {
 	var u types.User
 	q := createQueryGetUser(id)
 	r := m.DB.QueryRow(q)
-	args := []any{&u.ID, &u.FullName, &u.Email, &u.HashPass}
+	args := []any{&u.ID, &u.FullName, &u.Email, &u.HashPass, &u.IsActive, &u.IsVerified, &u.Role}
+	if err := r.Scan(args...); err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, errs.ErrNotFound
+		}
+		return nil, err
+	}
+	return &u, nil
+}
+func (m PsqlUserModel) GetUserByEmail(email string) (*types.User, error) {
+	var u types.User
+	q := createQueryGetUserByEmail(email)
+	r := m.DB.QueryRow(q)
+	args := []any{&u.ID, &u.FullName, &u.Email, &u.HashPass, &u.IsActive, &u.IsVerified, &u.Role}
 	if err := r.Scan(args...); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, errs.ErrNotFound
@@ -100,7 +114,7 @@ func (m PsqlUserModel) GetUser(id int64) (*types.User, error) {
 }
 
 func (m PsqlUserModel) CreateUser(u *types.UserCreate) (int64, error) {
-	qUser := "INSERT INTO users (full_name, email, hash_pass) VALUES($1, $2, $3) RETURNING id"
+	qUser := "INSERT INTO users (full_name, email, hash_pass, role) VALUES($1, $2, $3, $4) RETURNING id"
 	tx, err := m.DB.BeginTx(context.Background(), nil)
 	if err != nil {
 		return -1, err
@@ -109,10 +123,15 @@ func (m PsqlUserModel) CreateUser(u *types.UserCreate) (int64, error) {
 	if err != nil {
 		return -1, err
 	}
-	r := tx.QueryRow(qUser, u.FullName, u.Email, hash)
+	r := tx.QueryRow(qUser, u.FullName, u.Email, hash, u.Role)
 	var userID int64
 	if err := r.Scan(&userID); err != nil {
 		tx.Rollback()
+		if pqErr, ok := err.(*pq.Error); ok {
+			if pqErr.Code == "23505" {
+				err = errs.ErrDuplicateEmail
+			}
+		}
 		return -1, err
 	}
 	for _, tag := range u.Tags {
